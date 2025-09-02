@@ -18,8 +18,7 @@
 
 #include <opencv2/opencv.hpp>
 
-#include <pcl/kdtree/kdtree_flann.h>  // pcl include kdtree_flann throws error if PCL_NO_PRECOMPILE
-                                      // is defined before
+#include <pcl/kdtree/kdtree_flann.h>  // pcl include kdtree_flann throws error if PCL_NO_PRECOMPILE is defined before
 #define PCL_NO_PRECOMPILE
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
@@ -45,7 +44,6 @@
 #include <algorithm>
 #include <queue>
 #include <deque>
-#include <iostream>
 #include <fstream>
 #include <ctime>
 #include <cfloat>
@@ -58,8 +56,6 @@
 #include <thread>
 #include <mutex>
 
-using namespace std;
-
 typedef pcl::PointXYZI PointType;
 
 enum class SensorType { VELODYNE, OUSTER, LIVOX, HESAI };
@@ -69,17 +65,17 @@ class ParamServer : public rclcpp::Node
 public:
     std::string robot_id;
 
-    //Topics
-    string pointCloudTopic;
-    string imuTopic;
-    string odomTopic;
-    string gpsTopic;
+    // Topics
+    std::string pointCloudTopic;
+    std::string imuTopic;
+    std::string odomTopic;
+    std::string gpsTopic;
 
-    //Frames
-    string lidarFrame;
-    string baselinkFrame;
-    string odometryFrame;
-    string mapFrame;
+    // Frames
+    std::string lidarFrame;
+    std::string baselinkFrame;
+    std::string odometryFrame;
+    std::string mapFrame;
 
     // GPS Settings
     bool useImuHeadingInitialization;
@@ -89,7 +85,7 @@ public:
 
     // Save pcd
     bool savePCD;
-    string savePCDDirectory;
+    std::string savePCDDirectory;
 
     // Lidar Sensor Configuration
     SensorType sensor = SensorType::OUSTER;
@@ -106,9 +102,9 @@ public:
     float imuGyrBiasN;
     float imuGravity;
     float imuRPYWeight;
-    vector<double> extRotV;
-    vector<double> extRPYV;
-    vector<double> extTransV;
+    std::vector<double> extRotV;
+    std::vector<double> extRPYV;
+    std::vector<double> extTransV;
     Eigen::Matrix3d extRot;
     Eigen::Matrix3d extRPY;
     Eigen::Vector3d extTrans;
@@ -120,10 +116,10 @@ public:
     int edgeFeatureMinValidNum;
     int surfFeatureMinValidNum;
 
-    // voxel filter paprams
+    // voxel filter params
     float odometrySurfLeafSize;
     float mappingCornerLeafSize;
-    float mappingSurfLeafSize ;
+    float mappingSurfLeafSize;
 
     float z_tollerance;
     float rotation_tollerance;
@@ -152,7 +148,8 @@ public:
     float globalMapVisualizationPoseDensity;
     float globalMapVisualizationLeafSize;
 
-    ParamServer(std::string node_name, const rclcpp::NodeOptions & options) : Node(node_name, options)
+    ParamServer(std::string node_name, const rclcpp::NodeOptions & options) 
+        : Node(node_name, options)
     {
         declare_parameter("pointCloudTopic", "points");
         get_parameter("pointCloudTopic", pointCloudTopic);
@@ -189,27 +186,18 @@ public:
         std::string sensorStr;
         declare_parameter("sensor", "ouster");
         get_parameter("sensor", sensorStr);
-        if (sensorStr == "velodyne")
-        {
+        if (sensorStr == "velodyne") {
             sensor = SensorType::VELODYNE;
-        }
-        else if (sensorStr == "ouster")
-        {
+        } else if (sensorStr == "ouster") {
             sensor = SensorType::OUSTER;
-        }
-        else if (sensorStr == "livox")
-        {
+        } else if (sensorStr == "livox") {
             sensor = SensorType::LIVOX;
-        }
-        else if (sensorStr == "hesai")
-        {
+        } else if (sensorStr == "hesai") {
             sensor = SensorType::HESAI;
-        }
-        else
-        {
+        } else {
             RCLCPP_ERROR_STREAM(
                 get_logger(),
-                "Invalid sensor type (must be either 'velodyne' or 'ouster' or 'livox'): " << sensorStr);
+                "Invalid sensor type (must be 'velodyne', 'ouster', 'livox' or 'hesai'): " << sensorStr);
             rclcpp::shutdown();
         }
 
@@ -240,13 +228,13 @@ public:
         double ida[] = { 1.0,  0.0,  0.0,
                          0.0,  1.0,  0.0,
                          0.0,  0.0,  1.0};
-        std::vector < double > id(ida, std::end(ida));
+        std::vector<double> id(ida, std::end(ida));
         declare_parameter("extrinsicRot", id);
         get_parameter("extrinsicRot", extRotV);
         declare_parameter("extrinsicRPY", id);
         get_parameter("extrinsicRPY", extRPYV);
         double zea[] = {0.0, 0.0, 0.0};
-        std::vector < double > ze(zea, std::end(zea));
+        std::vector<double> ze(zea, std::end(zea));
         declare_parameter("extrinsicTrans", ze);
         get_parameter("extrinsicTrans", extTransV);
 
@@ -311,8 +299,6 @@ public:
         get_parameter("globalMapVisualizationPoseDensity", globalMapVisualizationPoseDensity);
         declare_parameter("globalMapVisualizationLeafSize", 1.0);
         get_parameter("globalMapVisualizationLeafSize", globalMapVisualizationLeafSize);
-
-        usleep(100);
     }
 
     sensor_msgs::msg::Imu imuConverter(const sensor_msgs::msg::Imu& imu_in)
@@ -332,6 +318,9 @@ public:
         imu_out.angular_velocity.z = gyr.z();
         // rotate roll pitch yaw
         Eigen::Quaterniond q_from(imu_in.orientation.w, imu_in.orientation.x, imu_in.orientation.y, imu_in.orientation.z);
+        // NOTE: Multiplication order matters. 
+        // Currently: q_final = q_from * extQRPY
+        // If extrinsics should be applied AFTER IMU orientation, consider extQRPY * q_from instead.
         Eigen::Quaterniond q_final = q_from * extQRPY;
         imu_out.orientation.x = q_final.x();
         imu_out.orientation.y = q_final.y();
@@ -349,7 +338,11 @@ public:
 };
 
 
-sensor_msgs::msg::PointCloud2 publishCloud(rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr thisPub, pcl::PointCloud<PointType>::Ptr thisCloud, rclcpp::Time thisStamp, std::string thisFrame)
+sensor_msgs::msg::PointCloud2 publishCloud(
+    rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr thisPub,
+    pcl::PointCloud<PointType>::Ptr thisCloud,
+    rclcpp::Time thisStamp,
+    std::string thisFrame)
 {
     sensor_msgs::msg::PointCloud2 tempCloud;
     pcl::toROSMsg(*thisCloud, tempCloud);
@@ -366,7 +359,6 @@ double stamp2Sec(const T& stamp)
     return rclcpp::Time(stamp).seconds();
 }
 
-
 template<typename T>
 void imuAngular2rosAngular(sensor_msgs::msg::Imu *thisImuMsg, T *angular_x, T *angular_y, T *angular_z)
 {
@@ -375,7 +367,6 @@ void imuAngular2rosAngular(sensor_msgs::msg::Imu *thisImuMsg, T *angular_x, T *a
     *angular_z = thisImuMsg->angular_velocity.z;
 }
 
-
 template<typename T>
 void imuAccel2rosAccel(sensor_msgs::msg::Imu *thisImuMsg, T *acc_x, T *acc_y, T *acc_z)
 {
@@ -383,7 +374,6 @@ void imuAccel2rosAccel(sensor_msgs::msg::Imu *thisImuMsg, T *acc_x, T *acc_y, T 
     *acc_y = thisImuMsg->linear_acceleration.y;
     *acc_z = thisImuMsg->linear_acceleration.z;
 }
-
 
 template<typename T>
 void imuRPY2rosRPY(sensor_msgs::msg::Imu *thisImuMsg, T *rosRoll, T *rosPitch, T *rosYaw)
@@ -398,14 +388,12 @@ void imuRPY2rosRPY(sensor_msgs::msg::Imu *thisImuMsg, T *rosRoll, T *rosPitch, T
     *rosYaw = imuYaw;
 }
 
-
-float pointDistance(PointType p)
+inline float pointDistance(const PointType& p)
 {
     return sqrt(p.x*p.x + p.y*p.y + p.z*p.z);
 }
 
-
-float pointDistance(PointType p1, PointType p2)
+inline float pointDistance(const PointType& p1, const PointType& p2)
 {
     return sqrt((p1.x-p2.x)*(p1.x-p2.x) + (p1.y-p2.y)*(p1.y-p2.y) + (p1.z-p2.z)*(p1.z-p2.z));
 }
@@ -447,24 +435,5 @@ auto qos_imu = rclcpp::QoS(
         qos_profile_imu.depth
     ),
     qos_profile_imu);
-
-rmw_qos_profile_t qos_profile_lidar{
-    RMW_QOS_POLICY_HISTORY_KEEP_LAST,
-    5,
-    RMW_QOS_POLICY_RELIABILITY_BEST_EFFORT,
-    RMW_QOS_POLICY_DURABILITY_VOLATILE,
-    RMW_QOS_DEADLINE_DEFAULT,
-    RMW_QOS_LIFESPAN_DEFAULT,
-    RMW_QOS_POLICY_LIVELINESS_SYSTEM_DEFAULT,
-    RMW_QOS_LIVELINESS_LEASE_DURATION_DEFAULT,
-    false
-};
-
-auto qos_lidar = rclcpp::QoS(
-    rclcpp::QoSInitialization(
-        qos_profile_lidar.history,
-        qos_profile_lidar.depth
-    ),
-    qos_profile_lidar);
 
 #endif
