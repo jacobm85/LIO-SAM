@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot name="ugv_beast">
+
+  <!-- ================= BASE ================= -->
+  <link name="base_footprint"/>
+  
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0.0035488876 5.764e-16 0.048482395" rpy="0 0 0"/>
+      <mass value="2.0322737"/>
+      <inertia ixx="0.0045489262" ixy="1.8813e-16" ixz="-1.49884e-05"
+               iyy="0.0064038187" iyz="2.7923e-17" izz="0.0080605039"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://ugv_description/meshes/ugv_beast/base_link.stl"/>
+      </geometry>
+      <material>
+        <color rgba="0.75 0.75 0.75 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://ugv_description/meshes/ugv_beast/base_link.stl"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="base_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+    <origin xyz="0.000460088 6.5e-10 0.08" rpy="0 0 0"/> 
+  </joint>
+
+  <!-- ================= IMU ================= -->
+  <!-- Byt denna mot imu_link i LIO-SAM -->
+  <link name="base_imu_link"/>
+  
+  <joint name="imu_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="base_imu_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+  <!-- ================= WHEELS ================= -->
+
+  <!-- Left Upper Wheel -->
+  <link name="left_up_wheel_link">
+    <inertial>
+      <origin xyz="1.857e-14 0.0155 7.25e-16" rpy="0 0 0"/>
+      <mass value="0.0602575"/>
+      <inertia ixx="1.4146e-05" ixy="5.41e-18" ixz="2.24e-31"
+               iyy="1.8641e-05" iyz="1.87e-19" izz="1.4146e-05"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://ugv_description/meshes/ugv_beast/left_up_wheel_link.stl"/>
+      </geometry>
+      <material>
+        <color rgba="0.63 0.63 0.63 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ugv_description/meshes/ugv_beast/left_up_wheel_link.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="left_up_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="left_up_wheel_link"/>
+    <origin xyz="0.0832 0.06191 0.02615" rpy="0 0 0"/>
+    <axis xyz="0 -1 0"/>
+  </joint>
+
+  <!-- Left Lower Wheel -->
+  <link name="left_down_wheel_link">
+    <inertial>
+      <origin xyz="7.20e-15 0.006 3.33e-16" rpy="0 0 0"/>
+      <mass value="0.0056572"/>
+      <inertia ixx="2.8012e-07" ixy="1.73e-19" ixz="7.08e-33"
+               iyy="4.2447e-07" iyz="5.91e-21" izz="2.8012e-07"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://ugv_description/meshes/ugv_beast/left_down_wheel_link.stl"/>
+      </geometry>
+      <material>
+        <color rgba="0.63 0.63 0.63 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ugv_description/meshes/ugv_beast/left_down_wheel_link.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="left_down_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="left_down_wheel_link"/>
+    <origin xyz="-0.07224 0.07071 0.03565" rpy="0 0 0"/>
+    <axis xyz="0 -1 0"/>
+  </joint>
+
+  <!-- Right Upper Wheel -->
+  <link name="right_up_wheel_link">
+    <inertial>
+      <origin xyz="1.836e-14 -0.0155 7.25e-16" rpy="0 0 0"/>
+      <mass value="0.0602575"/>
+      <inertia ixx="1.4146e-05" ixy="-5.34e-18" ixz="2.22e-31"
+               iyy="1.8641e-05" iyz="-1.87e-19" izz="1.4146e-05"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://ugv_description/meshes/ugv_beast/right_up_wheel_link.stl"/>
+      </geometry>
+      <material>
+        <color rgba="0.63 0.63 0.63 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ugv_description/meshes/ugv_beast/right_up_wheel_link.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="right_up_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="right_up_wheel_link"/>
+    <origin xyz="0.0832 -0.06191 0.02615" rpy="0 0 0"/>
+    <axis xyz="0 -1 0"/>
+  </joint>
+
+  <!-- Right Lower Wheel -->
+  <link name="right_down_wheel_link">
+    <inertial>
+      <origin xyz="7.13e-15 -0.006 3.33e-16" rpy="0 0 0"/>
+      <mass value="0.0056572"/>
+      <inertia ixx="2.8012e-07" ixy="-1.71e-19" ixz="7.0e-33"
+               iyy="4.2447e-07" iyz="-5.91e-21" izz="2.8012e-07"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://ugv_description/meshes/ugv_beast/right_down_wheel_link.stl"/>
+      </geometry>
+      <material>
+        <color rgba="0.63 0.63 0.63 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ugv_description/meshes/ugv_beast/right_down_wheel_link.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="right_down_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="right_down_wheel_link"/>
+    <origin xyz="-0.07224 -0.07071 0.03565" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+  <!-- ================= CAMERA ================= -->
+
+  <link name="3d_camera_link">
+    <inertial>
+      <origin xyz="0.0085 0 0" rpy="0 0 0"/>
+      <mass value="0.043316"/>
+      <inertia ixx="3.2722e-05" ixy="0" ixz="0"
+               iyy="3.8732e-06" iyz="0" izz="3.0935e-05"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://ugv_description/meshes/ugv_beast/3d_camera_link.stl"/>
+      </geometry>
+      <material>
+        <color rgba="0.63 0.63 0.63 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ugv_description/meshes/ugv_beast/3d_camera_link.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="3d_camera_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="3d_camera_link"/>
+    <origin xyz="0.06987 0 0.07926" rpy="0 0 0"/>
+  </joint>
+
+
+  <!-- ================= LIDAR ================= -->
+
+  <!-- ⚠️ Här ska du koppla in din LIO-SAM lidar -->
+  <!-- Ersätt base_lidar_link med din sensor -->
+<link name="base_lidar_link">
+  <inertial>
+    <origin xyz="0 0 0.035" rpy="0 0 0"/>
+    <mass value="0.83"/>
+    <inertia
+      ixx="0.0011" iyy="0.0011" izz="0.0010"
+      ixy="0.0" ixz="0.0" iyz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://ugv_description/meshes/ugv_beast/base_lidar_link.stl"/>
+    </geometry>
+    <material>
+      <color rgba="0.63 0.63 0.63 1"/>
+    </material>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://ugv_description/meshes/ugv_beast/base_lidar_link.stl"/>
+    </geometry>
+  </collision>
+</link>
+
+<joint name="base_lidar_link_joint" type="fixed">
+  <origin xyz="0.11438 0 0.09730" rpy="0 0 1.5708"/>
+  <parent link="base_link"/>
+  <child link="base_lidar_link"/>
+</joint>
+
+  <!-- ================= PAN-TILT BASE ================= -->
+
+  <link name="pt_base_link">
+    <inertial>
+      <origin xyz="0.00128 0 0.02152" rpy="0 0 0"/>
+      <mass value="0.1095"/>
+      <inertia ixx="3.30e-05" iyy="5.16e-05" izz="4.86e-05"
+               ixy="0" ixz="-2.93e-06" iyz="0"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://ugv_description/meshes/ugv_beast/pt_base_link.stl"/>
+      </geometry>
+      <material>
+        <color rgba="0.63 0.63 0.63 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ugv_description/meshes/ugv_beast/pt_base_link.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="pt_base_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="pt_base_link"/>
+    <origin xyz="-0.01433 0 0.09730" rpy="0 0 0"/>
+  </joint>
+
+
+  <!-- ================= PAN-TILT LINK 1 ================= -->
+
+  <link name="pt_link1">
+    <inertial>
+      <origin xyz="-0.00338 0 0.01761" rpy="0 0 0"/>
+      <mass value="0.00711"/>
+      <inertia ixx="3.90e-06" iyy="2.50e-06" izz="2.60e-06"
+               ixy="0" ixz="2.33e-07" iyz="0"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://ugv_description/meshes/ugv_beast/pt_link1.stl"/>
+      </geometry>
+      <material>
+        <color rgba="0.63 0.63 0.63 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ugv_description/meshes/ugv_beast/pt_link1.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="pt_base_to_link1" type="revolute">
+    <parent link="pt_base_link"/>
+    <child link="pt_link1"/>
+    <origin xyz="0.01015 0 0.048" rpy="0 0 0"/>
+    <axis xyz="0 0 -1"/>
+    <limit lower="-3.14" upper="3.14" effort="0" velocity="0"/>
+  </joint>
+
+
+  <!-- ================= PAN-TILT LINK 2 ================= -->
+
+  <link name="pt_link2">
+    <inertial>
+      <origin xyz="0.02182 0.01196 0.02" rpy="0 0 0"/>
+      <mass value="0.0970"/>
+      <inertia ixx="3.07e-05" iyy="3.74e-05" izz="4.95e-05"
+               ixy="-9.61e-07" ixz="0" iyz="0"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://ugv_description/meshes/ugv_beast/pt_link2.stl"/>
+      </geometry>
+      <material>
+        <color rgba="0.63 0.63 0.63 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://ugv_description/meshes/ugv_beast/pt_link2.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="pt_link1_to_link2" type="revolute">
+    <parent link="pt_link1"/>
+    <child link="pt_link2"/>
+    <origin xyz="0 0.02 0.043" rpy="1.5708 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-0.523" upper="1.571" effort="0" velocity="0"/>
+  </joint>
+
+
+  <!-- ================= PT CAMERA ================= -->
+
+  <link name="pt_camera_link">
+    <inertial>
+      <origin xyz="0.00631 0 0.00095" rpy="0 -1.5708 1.5708"/>
+      <mass value="0.00624"/>
+      <inertia ixx="5.11e-07" iyy="3.99e-07" izz="4.03e-07"
+               ixy="0" ixz="-4.01e-08" iyz="0"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 -1.5708 1.5708"/>
+      <geometry>
+        <mesh filename="package://ugv_description/meshes/ugv_beast/pt_camera_link.stl"/>
+      </geometry>
+      <material>
+        <color rgba="0.63 0.63 0.63 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 -1.5708 1.5708"/>
+      <geometry>
+        <mesh filename="package://ugv_description/meshes/ugv_beast/pt_camera_link.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="pt_link2_to_camera" type="fixed">
+    <parent link="pt_link2"/>
+    <child link="pt_camera_link"/>
+    <origin xyz="0.04769 -0.00057 0.02" rpy="3.14 -1.5708 0"/>
+  </joint>
+</robot>
