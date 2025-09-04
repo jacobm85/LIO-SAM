@@ -36,13 +36,41 @@
 
   <!-- ================= IMU ================= -->
   <!-- Byt denna mot imu_link i LIO-SAM -->
-  <link name="base_imu_link"/>
-  
+  <!-- LIO-SAM lidar_link (din tidigare base_lidar_link) -->
+  <link name="lidar_link"/>
+  <joint name="lidar_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="lidar_link"/>
+    <!-- Justera position här (du sa 7 cm framåt + VLP-16 höjd) -->
+    <origin xyz="0.114 0 0.097" rpy="0 0 1.5708"/>
+  </joint>
+
+  <!-- LIO-SAM imu_link (din tidigare base_imu_link) -->
+  <link name="imu_link"/>
   <joint name="imu_joint" type="fixed">
     <parent link="base_link"/>
-    <child link="base_imu_link"/>
+    <child link="imu_link"/>
+    <!-- Placera imu korrekt här -->
     <origin xyz="0 0 0" rpy="0 0 0"/>
   </joint>
+
+  <!-- LIO-SAM laser_sensor_frame (kan kopplas direkt till imu) -->
+  <link name="laser_sensor_frame"/>
+  <joint name="laser_joint" type="fixed">
+    <parent link="imu_link"/>
+    <child link="laser_sensor_frame"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <!-- LIO-SAM navsat_link (GPS) -->
+  <link name="navsat_link"/>
+  <joint name="navsat_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="navsat_link"/>
+    <!-- Placera GPS här -->
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
   <!-- ================= WHEELS ================= -->
 
   <!-- Left Upper Wheel -->
@@ -193,8 +221,8 @@
   <!-- ================= LIDAR ================= -->
 
   <!-- ⚠️ Här ska du koppla in din LIO-SAM lidar -->
-  <!-- Ersätt base_lidar_link med din sensor -->
-<link name="base_lidar_link">
+  <!-- Ersätt lidar_link med din sensor -->
+<link name="lidar_link">
   <inertial>
     <origin xyz="0 0 0.035" rpy="0 0 0"/>
     <mass value="0.83"/>
@@ -219,10 +247,10 @@
   </collision>
 </link>
 
-<joint name="base_lidar_link_joint" type="fixed">
+<joint name="lidar_link_joint" type="fixed">
   <origin xyz="0.11438 0 0.09730" rpy="0 0 1.5708"/>
   <parent link="base_link"/>
-  <child link="base_lidar_link"/>
+  <child link="lidar_link"/>
 </joint>
 
   <!-- ================= PAN-TILT BASE ================= -->
