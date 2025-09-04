@@ -1,0 +1,338 @@
+Panels:
+  - Class: rviz2/Displays
+    Name: Displays
+    Help Height: 191
+    Property Tree Widget:
+      Expanded:
+        - /links1
+        - /Odometry1
+        - /Point Cloud1
+        - /Feature Cloud1
+        - /Mapping1
+      Splitter Ratio: 0.56
+  - Class: rviz2/Selection
+    Name: Selection
+  - Class: rviz2/Views
+    Name: Views
+    Expanded:
+      - /Current View1
+    Splitter Ratio: 0.5
+  - Class: rviz2/Tool Properties
+    Name: Tool Properties
+    Splitter Ratio: 0.5
+Preferences:
+  PromptSaveOnExit: true
+Toolbars:
+  toolButtonStyle: 2
+Visualization Manager:
+  Name: root
+  Class: ""
+  Enabled: true
+  Global Options:
+    Fixed Frame: map
+    Frame Rate: 30
+    Background Color: 0; 0; 0
+    Default Light: true
+  Displays:
+    - Class: rviz2/Group
+      Name: links
+      Enabled: true
+      Displays:
+        - Class: rviz2/TF
+          Name: TF
+          Enabled: false
+          Marker Scale: 3
+          Show Arrows: true
+          Show Axes: true
+          Show Names: true
+          Frame Timeout: 999
+          Frames:
+            All Enabled: false
+        - Class: rviz2/Axes
+          Name: map
+          Enabled: true
+          Reference Frame: map
+          Length: 2
+          Radius: 0.5
+        - Class: rviz2/Axes
+          Name: base_link
+          Enabled: true
+          Reference Frame: base_link
+          Length: 1
+          Radius: 0.3
+
+    - Class: rviz2/Group
+      Name: Odometry
+      Enabled: false
+      Displays:
+        - Class: rviz2/Odometry
+          Name: Odom IMU
+          Enabled: true
+          Topic: /odometry/imu
+          Shape:
+            Value: Axes
+            Axes Length: 0.5
+            Axes Radius: 0.1
+            Head Length: 0.3
+            Head Radius: 0.1
+            Shaft Length: 1
+            Shaft Radius: 0.05
+            Alpha: 1
+          Covariance:
+            Position:
+              Alpha: 0.3
+              Color: 204; 51; 204
+            Orientation:
+              Alpha: 0.5
+              Color: 255; 255; 127
+          Keep: 300
+          Angle Tolerance: 0.1
+          Position Tolerance: 0.1
+
+        - Class: rviz2/Odometry
+          Name: Odom GPS
+          Enabled: true
+          Topic: /odometry/gps
+          Shape:
+            Value: Axes
+            Axes Length: 1
+            Axes Radius: 0.3
+            Head Length: 0.3
+            Head Radius: 0.1
+            Shaft Length: 1
+            Shaft Radius: 0.05
+            Alpha: 1
+          Covariance:
+            Position:
+              Alpha: 0.3
+              Color: 204; 51; 204
+            Orientation:
+              Alpha: 0.5
+              Color: 255; 255; 127
+          Keep: 300
+          Angle Tolerance: 0.1
+          Position Tolerance: 0.1
+
+        - Class: rviz2/Odometry
+          Name: Odom lidar
+          Enabled: false
+          Topic: /lio_sam/mapping/odometry
+          Shape:
+            Value: Axes
+            Axes Length: 0.25
+            Axes Radius: 0.1
+            Head Length: 0.3
+            Head Radius: 0.1
+            Shaft Length: 1
+            Shaft Radius: 0.05
+            Alpha: 1
+          Covariance:
+            Position:
+              Alpha: 0.3
+              Color: 204; 51; 204
+            Orientation:
+              Alpha: 0.5
+              Color: 255; 255; 127
+          Keep: 300
+          Angle Tolerance: 0.1
+          Position Tolerance: 0.1
+
+    - Class: rviz2/Group
+      Name: Point Cloud
+      Enabled: true
+      Displays:
+        - Class: rviz2/PointCloud2
+          Name: Velodyne
+          Enabled: true
+          Topic: /lio_sam/deskew/cloud_deskewed
+          Style: Points
+          Size (m): 0.01
+          Size (Pixels): 2
+          Position Transformer: XYZ
+          Color Transformer: Intensity
+          Alpha: 1
+          Queue Size: 10
+          Use Fixed Frame: true
+          Use rainbow: true
+          Autocompute Intensity Bounds: false
+          Max Intensity: 128
+          Min Intensity: 0
+
+        - Class: rviz2/PointCloud2
+          Name: Reg Cloud
+          Enabled: false
+          Topic: /lio_sam/mapping/cloud_registered
+          Style: Points
+          Size (m): 0.01
+          Size (Pixels): 3
+          Position Transformer: XYZ
+          Color Transformer: Intensity
+          Alpha: 1
+          Queue Size: 10
+          Use Fixed Frame: true
+          Use rainbow: true
+          Autocompute Intensity Bounds: true
+
+    - Class: rviz2/Group
+      Name: Feature Cloud
+      Enabled: false
+      Displays:
+        - Class: rviz2/PointCloud2
+          Name: Edge Feature
+          Enabled: true
+          Topic: /lio_sam/feature/cloud_corner
+          Style: Points
+          Size (m): 0.01
+          Size (Pixels): 5
+          Position Transformer: XYZ
+          Color Transformer: FlatColor
+          Color: 0; 255; 0
+          Alpha: 1
+          Queue Size: 10
+          Use Fixed Frame: true
+          Use rainbow: true
+          Autocompute Intensity Bounds: true
+
+        - Class: rviz2/PointCloud2
+          Name: Plannar Feature
+          Enabled: true
+          Topic: /lio_sam/feature/cloud_surface
+          Style: Points
+          Size (m): 0.01
+          Size (Pixels): 3
+          Position Transformer: XYZ
+          Color Transformer: FlatColor
+          Color: 255; 85; 255
+          Alpha: 1
+          Queue Size: 10
+          Use Fixed Frame: true
+          Use rainbow: true
+          Autocompute Intensity Bounds: true
+
+    - Class: rviz2/Group
+      Name: Mapping
+      Enabled: true
+      Displays:
+        - Class: rviz2/PointCloud2
+          Name: Map (cloud)
+          Enabled: true
+          Topic: /lio_sam/mapping/cloud_registered
+          Style: Points
+          Size (m): 0.01
+          Size (Pixels): 2
+          Position Transformer: XYZ
+          Color Transformer: Intensity
+          Alpha: 0.3
+          Decay Time: 300
+          Use Fixed Frame: true
+          Use rainbow: true
+
+        - Class: rviz2/PointCloud2
+          Name: Map (local)
+          Enabled: false
+          Topic: /lio_sam/mapping/map_local
+          Style: Flat Squares
+          Size (m): 0.1
+          Size (Pixels): 2
+          Position Transformer: XYZ
+          Color Transformer: AxisColor
+          Alpha: 1
+          Queue Size: 10
+          Use Fixed Frame: true
+          Use rainbow: true
+          Autocompute Intensity Bounds: true
+
+        - Class: rviz2/PointCloud2
+          Name: Map (global)
+          Enabled: false
+          Topic: /lio_sam/mapping/map_global
+          Style: Points
+          Size (m): 0.01
+          Size (Pixels): 2
+          Position Transformer: XYZ
+          Color Transformer: Intensity
+          Alpha: 1
+          Queue Size: 10
+          Use Fixed Frame: true
+          Use rainbow: true
+          Autocompute Intensity Bounds: true
+
+        - Class: rviz2/Path
+          Name: Path (global)
+          Enabled: true
+          Topic: /lio_sam/mapping/path
+          Color: 85; 255; 255
+          Buffer Length: 1
+          Line Width: 0.1
+          Line Style: Billboards
+          Head Diameter: 0.3
+          Head Length: 0.2
+          Length: 0.3
+          Pose Style: None
+          Pose Color: 255; 85; 255
+          Radius: 0.03
+          Shaft Diameter: 0.1
+          Shaft Length: 0.1
+          Offset: {X: 0, Y: 0, Z: 0}
+
+        - Class: rviz2/Path
+          Name: Path (local)
+          Enabled: true
+          Topic: /lio_sam/imu/path
+          Color: 255; 85; 255
+          Buffer Length: 1
+          Line Width: 0.1
+          Line Style: Billboards
+          Head Diameter: 0.3
+          Head Length: 0.2
+          Length: 0.3
+          Pose Style: None
+          Pose Color: 255; 85; 255
+          Radius: 0.03
+          Shaft Diameter: 0.1
+          Shaft Length: 0.1
+          Offset: {X: 0, Y: 0, Z: 0}
+
+        - Class: rviz2/PointCloud2
+          Name: Loop closure
+          Enabled: false
+          Topic: /lio_sam/mapping/icp_loop_closure_corrected_cloud
+          Style: Flat Squares
+          Size (m): 0.3
+          Size (Pixels): 2
+          Position Transformer: XYZ
+          Color Transformer: AxisColor
+          Alpha: 1
+          Queue Size: 10
+          Use Fixed Frame: true
+          Use rainbow: true
+          Autocompute Intensity Bounds: true
+
+        - Class: rviz2/MarkerArray
+          Name: Loop constraint
+          Enabled: true
+          Marker Topic: /lio_sam/mapping/loop_closure_constraints
+          Queue Size: 100
+
+  Tools:
+    - Class: rviz2/Interact
+      Hide Inactive Objects: true
+    - Class: rviz2/FocusCamera
+    - Class: rviz2/Measure
+
+  Views:
+    Current:
+      Class: rviz2/Orbit
+      Name: Current View
+      Distance: 97.437
+      Focal Point: {X: 0, Y: 0, Z: 0}
+      Target Frame: base_link
+      Pitch: 1.125
+      Yaw: 3.332
+      Focal Shape Size: 0.05
+      Near Clip Distance: 0.01
+      Enable Stereo Rendering:
+        Value: false
+        Stereo Eye Separation: 0.06
+        Stereo Focal Distance: 1
+        Swap Stereo Eyes: false
